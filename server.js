@@ -5,6 +5,9 @@ const app = express();
 //connection to DB
 connectToDatabase();
 
+//In it middleware
+app.use(express.json()); // this allows us to take request.body data
+
 // Defining Routes
 app.use('/api/users', require('./routes/api/users'))
 app.use('/api/posts', require('./routes/api/posts'))
