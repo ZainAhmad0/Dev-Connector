@@ -1,7 +1,17 @@
 const express = require('express');
-const app = express();
+const connectToDatabase = require("./config/db");
 
-app.get('/',(req,res)=>res.send("API Running"));
+const app = express();
+//connection to DB
+connectToDatabase();
+
+// Defining Routes
+app.use('/api/users', require('./routes/api/users'))
+app.use('/api/posts', require('./routes/api/posts'))
+app.use('/api/auth', require('./routes/api/auth'))
+app.use('/api/profile', require('./routes/api/profile'))
+
+app.get('/', (req, res) => res.send("API Running"));
 
 const PORT = process.env.PORT || 3000
-app.listen(PORT,()=>console.log(`Server started on port no ${PORT}`))
+app.listen(PORT, () => console.log(`Server started on port no ${PORT}`))
