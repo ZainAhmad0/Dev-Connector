@@ -8,16 +8,25 @@ const initialState = {
 import {
     CLEAR_PROFILE,
     GET_PROFILE,
-    PROFILE_ERROR
+    GET_PROFILES,
+    PROFILE_ERROR,
+    UPDATE_PROFILE
 } from '../actions/types'
 
 export default function (state = initialState, action) {
     const { type, payload } = action;
     switch (type) {
         case GET_PROFILE:
+        case UPDATE_PROFILE:
             return ({
                 ...state,
                 profile: payload,
+                loading: false
+            });
+        case GET_PROFILES:
+            return ({
+                ...state,
+                profiles: payload,
                 loading: false
             });
         case PROFILE_ERROR:
@@ -30,7 +39,7 @@ export default function (state = initialState, action) {
         case CLEAR_PROFILE:
             return ({
                 ...state,
-                profile:null,
+                profile: null,
                 loading: false
             });
         default:

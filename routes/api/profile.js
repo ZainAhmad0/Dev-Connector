@@ -2,6 +2,7 @@ const express = require('express');
 const Router = express.Router();
 const auth = require('../../middleware/auth');
 const User = require('../../models/Users');
+const Post = require('../../models/Post');
 const Profile = require('../../models/Profile');
 const axios = require('axios');
 const config = require('config');
@@ -14,7 +15,7 @@ Router.get('/me', auth, async (req, res) => {
     try {
         const profile = await Profile.findOne({
             user: req.user.id
-        }).populate('users', ['name', 'avatar']);
+        }).populate('user');
 
         if (!profile) {
             return res.status(400).json({ msg: 'There is no profile for this user' });
@@ -71,8 +72,10 @@ Router.post('/', [auth,
     if (bio) profileFields.bio = bio;
     if (status) profileFields.status = status;
     if (githubusername) profileFields.githubusername = githubusername;
-    if (skills) {
+    if (skills && !Array.isArray(skills)) {
         profileFields.skills = skills.split(',').map(skill => skill.trim());
+    }else{
+        profileFields.skills = skills;
     }
     if (youtube) socials.youtube = youtube;
     if (facebook) socials.facebook = facebook;
@@ -86,7 +89,6 @@ Router.post('/', [auth,
             // update 
             await Profile.findOneAndUpdate({ user: req.user.id }, profileFields)
             profile = await Profile.findOne({ user: req.user.id })
-            console.log(profile);
             return res.send(profile);
         }
         //create
@@ -105,7 +107,7 @@ Router.post('/', [auth,
 
 Router.get('/', async (req, res) => {
     try {
-        const profiles = await Profile.find().populate('users');
+        const profiles = await Profile.find().populate('user',['name','avatar']);
         return res.json(profiles);
     } catch (err) {
         console.error(err.message);
@@ -119,7 +121,7 @@ Router.get('/', async (req, res) => {
 
 Router.get('/user/:user_id', async (req, res) => {
     try {
-        const profile = await Profile.findOne({ user: req.params.user_id }).populate('users');
+        const profile = await Profile.findOne({ user: req.params.user_id }).populate('user');
         if (!profile) {
             res.status(400).json({ msg: "Profile not found" });
         }
@@ -138,7 +140,8 @@ Router.get('/user/:user_id', async (req, res) => {
 
 Router.delete('/', auth, async (req, res) => {
     try {
-        // @todo -  delete user posts
+        // remove user posts
+        await Post.deleteMany({user: req.user.id})
         await Profile.findOneAndRemove({ user: req.user.id });
         // deleting user
         await User.findOneAndRemove({ _id: req.user.id });

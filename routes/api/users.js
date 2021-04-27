@@ -42,7 +42,8 @@ Router.post('/', [
             s: '200',
             r: 'pg',
             d: 'mm'
-        });
+        },true);
+        
         user = new User({
             name,
             email,
@@ -76,8 +77,25 @@ Router.post('/', [
         console.log(error.message)
         return res.status(500).send("Server Error")
     }
-
-
 });
+
+
+// @route    GET api/profile/me
+// @desc     Get current users profile
+// @access   Private
+Router.get('/:user_id', async (req, res) => {
+    try {
+        
+        const user = await User.findOne({"_id" : req.params.user_id});
+        if (!user) {
+            return res.status(400).json({ msg: 'There is no user with this id' });
+        }
+        res.json(user);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 
 module.exports = Router;

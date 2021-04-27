@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import '../../App.css';
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { logout } from '../../actions/auth'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -19,6 +19,7 @@ class Navbar extends React.Component {
     )
     this.authLinks = (
       <ul>
+        <li><Link to="/profiles">Developers</Link></li>
         <li>
           <Link to="/dashboard">
             <i className='fas fa-user'></i>{"  "}
@@ -26,7 +27,7 @@ class Navbar extends React.Component {
           </Link>
         </li>
         <li>
-          <Link onClick={this.props.logout} to="/profiles">
+          <Link onClick={this.props.logout} to="/login">
             <i className='fas fa-sign-out-alt'></i>{"  "}
             <span className='hide-sm'>Logout</span>
           </Link>
