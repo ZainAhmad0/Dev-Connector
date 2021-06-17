@@ -20,6 +20,7 @@ class Navbar extends React.Component {
     this.authLinks = (
       <ul>
         <li><Link to="/profiles">Developers</Link></li>
+        <li><Link to="/posts">Posts</Link></li>
         <li>
           <Link to="/dashboard">
             <i className='fas fa-user'></i>{"  "}

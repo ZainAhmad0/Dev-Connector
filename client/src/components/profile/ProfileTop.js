@@ -28,7 +28,7 @@ const ProfileTop = ({ profile: {
                     </a>
                 )}
                 {social && social.twitter && (
-                    <a href={social.twitter} target="_blank" rel="noopener noreferrer">
+                    <a href={`www.twitter.com/${social.twitter}`} target="_blank">
                         <i class="fab fa-twitter fa-2x"></i>
                     </a>
                 )}
